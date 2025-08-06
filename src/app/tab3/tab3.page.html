@@ -1,0 +1,112 @@
+<ion-header class="glass-header">
+  <ion-toolbar class="custom-toolbar flex" color="white">
+    <ion-title>
+      <div class="toolbar-title">
+        <img src="assets/icon/tree-icon.png" alt="TreePledge Logo" class="logo"/>
+        <span class="sub-title">My Profile</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- User Profile Card -->
+  <ion-card class="glass-card" *ngIf="currentUser">
+    <ion-card-content style="text-align: center;">
+      <ion-avatar style="width: 80px; height: 80px; margin: 0 auto 16px;">
+        <img [src]="currentUser.avatar || 'assets/icon/tree-icon.png'" [alt]="currentUser.name">
+      </ion-avatar>
+      <h2>{{ currentUser.name }}</h2>
+      <p>{{ currentUser.email }}</p>
+      <p style="color: var(--ion-color-medium);">🌱 Environmental Champion</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Stats Card -->
+  <ion-card class="glass-card" *ngIf="currentUser">
+    <ion-card-header>
+      <ion-card-title>🏆 Achievements</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-icon name="leaf-outline" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Trees Planted</h3>
+            <p>{{ currentUser.totalTrees }} trees contributing to a greener world</p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ribbon-outline" slot="start" color="warning"></ion-icon>
+          <ion-label>
+            <h3>Badges Earned</h3>
+            <p>{{ currentUser.badges.length }} environmental badges</p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="people-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>Member Since</h3>
+            <p>January 2024 - Active eco-warrior</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Badges Card -->
+  <ion-card class="glass-card" *ngIf="currentUser && currentUser.badges && currentUser.badges.length > 0">
+    <ion-card-header>
+      <ion-card-title>🎖️ My Badges</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <ion-chip *ngFor="let badge of currentUser.badges" color="success">
+          🏆 {{ badge }}
+        </ion-chip>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Account Actions -->
+  <ion-card class="glass-card">
+    <ion-card-header>
+      <ion-card-title>⚙️ Account Settings</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" fill="outline" color="primary">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        Edit Profile
+      </ion-button>
+      
+      <ion-button expand="block" fill="outline" color="secondary">
+        <ion-icon name="notifications-outline" slot="start"></ion-icon>
+        Notification Settings
+      </ion-button>
+      
+      <ion-button expand="block" fill="outline" color="tertiary">
+        <ion-icon name="share-outline" slot="start"></ion-icon>
+        Share Achievements
+      </ion-button>
+      
+      <ion-button expand="block" fill="outline" color="medium">
+        <ion-icon name="help-outline" slot="start"></ion-icon>
+        Help & Support
+      </ion-button>
+      
+      <ion-button expand="block" fill="clear" color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Logout
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- App Info -->
+  <ion-card class="glass-card">
+    <ion-card-content style="text-align: center; opacity: 0.7;">
+      <p>🌍 TreePledge v1.0.0</p>
+      <p>Making the world greener, one tree at a time</p>
+      <p style="font-size: 0.8em;">© 2024 Green Initiative</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

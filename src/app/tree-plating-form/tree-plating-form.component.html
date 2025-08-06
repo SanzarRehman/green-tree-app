@@ -1,0 +1,140 @@
+<ion-card class="glass-card">
+  <ion-card-header>
+    <ion-card-title>🌱 Plant a New Tree</ion-card-title>
+    <ion-card-subtitle>
+      Record your tree planting activity and track your environmental impact
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <form [formGroup]="plantingForm" (ngSubmit)="onSubmit()">
+      <!-- Tree Species Selection -->
+      <ion-item>
+        <ion-label position="stacked">Tree Species *</ion-label>
+        <ion-select formControlName="treeSpeciesId" placeholder="Select a tree species" (ionChange)="onSpeciesChange($event.detail.value)">
+          <ion-select-option *ngFor="let species of treeSpecies" [value]="species.id">
+            {{ species.name }} ({{ species.scientificName }})
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Selected Species Info -->
+      <ion-card *ngIf="selectedSpecies" color="light">
+        <ion-card-content>
+          <h2>{{ selectedSpecies.name }}</h2>
+          <p>{{ selectedSpecies.description }}</p>
+          <ion-chip color="success">🌿 {{ selectedSpecies.co2AbsorptionPerYear }} kg CO₂/year</ion-chip>
+          <ion-chip color="tertiary">🌳 {{ selectedSpecies.matureHeight }} m height</ion-chip>
+          <ion-chip color="warning">⚡ {{ selectedSpecies.growthRate }}</ion-chip>
+
+          <img *ngIf="selectedSpecies.imageUrl" [src]="selectedSpecies.imageUrl" [alt]="selectedSpecies.name" style="width: 100%; margin-top: 10px; border-radius: 10px;">
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Planting Date -->
+      <ion-item>
+        <ion-label position="stacked">Planting Date *</ion-label>
+        <ion-datetime-button datetime="plantDate"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ion-datetime id="plantDate" presentation="date" formControlName="plantingDate"></ion-datetime>
+        </ion-modal>
+      </ion-item>
+
+      <!-- Location Input -->
+      <ion-item>
+        <ion-label position="stacked">Latitude *</ion-label>
+        <ion-input type="number" formControlName="latitude" placeholder="e.g., 51.5074"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Longitude *</ion-label>
+        <ion-input type="number" formControlName="longitude" placeholder="e.g., -0.1278"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" fill="outline" color="medium" (click)="useCurrentLocation()">
+        <ion-icon name="navigate-outline" slot="start"></ion-icon>
+        Use GPS
+      </ion-button>
+
+      <!-- Address -->
+      <ion-item>
+        <ion-label position="stacked">Address (Optional)</ion-label>
+        <ion-input formControlName="address" placeholder="e.g., Central Park, NY"></ion-input>
+      </ion-item>
+
+      <!-- Notes -->
+      <ion-item>
+        <ion-label position="stacked">Notes (Optional)</ion-label>
+        <ion-textarea formControlName="notes" placeholder="Additional notes..."></ion-textarea>
+      </ion-item>
+
+      <!-- Photos Upload -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>📸 Tree Photos</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button expand="block" fill="solid" color="primary" (click)="capturePhoto()">
+            <ion-icon name="camera-outline" slot="start"></ion-icon>
+            Capture Photo
+          </ion-button>
+
+          <ion-button expand="block" fill="solid" color="secondary" (click)="captureMultiplePhotos()">
+            <ion-icon name="images-outline" slot="start"></ion-icon>
+            Capture 3 Photos
+          </ion-button>
+
+          <input type="file" accept="image/*" multiple hidden #fileInput (change)="onFileSelected($event)">
+          <ion-button expand="block" fill="outline" color="medium" (click)="fileInput.click()">
+            <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+            Upload Photo
+          </ion-button>
+
+          <!-- Photo Preview Grid -->
+          <ion-grid *ngIf="capturedPhotos.length > 0">
+            <ion-row>
+              <ion-col size="6" *ngFor="let photo of capturedPhotos; let i = index">
+                <ion-img [src]="photo.url" style="border-radius: 8px;"></ion-img>
+                <ion-button size="small" color="danger" (click)="removePhoto(i)">Remove</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Submit Buttons -->
+      <ion-button type="submit" expand="block" color="success" [disabled]="!plantingForm.valid || isLoading">
+        <ion-spinner name="dots" *ngIf="isLoading"></ion-spinner>
+        {{ isLoading ? 'Recording...' : 'Record Tree Planting' }}
+      </ion-button>
+
+      <ion-button routerLink="/tree-pledge/home" expand="block" fill="clear" color="medium">
+        Cancel
+      </ion-button>
+    </form>
+  </ion-card-content>
+</ion-card>
+
+<!-- Environmental Impact Side Card -->
+<ion-card *ngIf="selectedSpecies">
+  <ion-card-header>
+    <ion-card-title>🌍 Environmental Impact</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ul>
+      <li>Absorbs <strong>{{ selectedSpecies.co2AbsorptionPerYear }} kg</strong> CO₂ annually</li>
+      <li>Produces oxygen for <strong>2 people</strong></li>
+      <li>Filters <strong>680L</strong> water per year</li>
+      <li>Supports local wildlife</li>
+    </ul>
+  </ion-card-content>
+</ion-card>
+
+<!-- Toast Notifications -->
+<ion-toast
+  [isOpen]="showToast"
+  [message]="toastMessage"
+  duration="3000"
+  position="top"
+  (didDismiss)="showToast = false">
+</ion-toast>

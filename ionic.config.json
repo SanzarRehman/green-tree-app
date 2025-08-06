@@ -1,0 +1,7 @@
+{
+  "name": "tree-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

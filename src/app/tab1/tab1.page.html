@@ -1,0 +1,153 @@
+<ion-header class="glass-header">
+  <ion-toolbar class="custom-toolbar flex" color="white">
+    <ion-buttons slot="start">
+    </ion-buttons>
+
+    <ion-title>
+      <div class="toolbar-title">
+        <img src="assets/icon/tree-icon.png" alt="TreePledge Logo" class="logo"/>
+        <span class="sub-title">Welcome, {{ currentUser?.name || 'Green Warrior' }}!</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="glass-card" style="text-align: center;">
+    <h2>🌿 Hello, Eco Champion!</h2>
+    <p>You're helping the planet grow greener. Here's your progress at a glance:</p>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title>My Trees</ion-card-title>
+            <ion-card-subtitle>{{ stats.totalTrees || 0 }} Planted</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title>CO₂ Saved</ion-card-title>
+            <ion-card-subtitle>{{ stats.totalCO2Saved || 0 }} kg/year</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title>Certificates</ion-card-title>
+            <ion-card-subtitle>{{ stats.certificates || 0 }} Earned</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title>Badges</ion-card-title>
+            <ion-card-subtitle>{{ currentUser?.badges?.length || 0 }} Earned</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Chart -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title class="growth-card">
+              <ion-icon aria-hidden="true" name="leaf-outline"></ion-icon>
+              Growth Over Time</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="chart-container">
+              <canvas id="treeChart"></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Map -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title class="growth-card">
+              <ion-icon aria-hidden="true" name="location-outline"></ion-icon>
+              Your Planting Locations
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div id="map"
+                 style="height: 300px; border-radius: 15px; background: rgba(255,255,255,0.1);">
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- User Badges Section -->
+    <ion-row *ngIf="currentUser && currentUser.badges && currentUser.badges.length > 0">
+      <ion-col size="12">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title class="growth-card">
+              <ion-icon name="ribbon-outline" class="activity-icon"></ion-icon>
+              Your Badges
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <ion-chip *ngFor="let badge of currentUser.badges" color="success">
+                🏆 {{ badge }}
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Activity Feed -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="glass-card">
+          <ion-card-header>
+            <ion-card-title class="activity-title">
+              <ion-icon name="notifications-outline" slot="start" class="activity-icon"></ion-icon>
+              Latest Activities
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="none">
+              <ion-item>
+                <ion-icon name="leaf-outline" slot="start" color="success"></ion-icon>
+                <ion-label>Planted {{ stats.totalTrees || 0 }} trees this year</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="ribbon-outline" slot="start" color="warning"></ion-icon>
+                <ion-label>Earned the <strong>"{{ currentUser?.badges?.[0] || 'Tree Hero' }}"</strong> badge</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
+                <ion-label>Saved <strong>{{ stats.totalCO2Saved || 0 }} kg CO₂</strong> annually</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="people-outline" slot="start" color="secondary"></ion-icon>
+                <ion-label>Joined the <strong>Green Bangladesh Initiative</strong></ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>
